@@ -1,5 +1,6 @@
 package com.ajax.test.service;
 
+
 import java.util.Map;
 
 public interface UserService {

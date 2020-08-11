@@ -7,6 +7,17 @@
 <title>Insert title here</title>
 </head>
 <body>
-컴활년 딱대
+<script>
+/* 0,'',null,undefined, false == false
+	!0,!'',!null,!undefined,!false == true
+*/
+function func(str){
+	if(str){
+		alert(str.length);
+	}else{
+		alert('파라메터 없음 ')
+	}
+}
+</script>
 </body>
 </html>
