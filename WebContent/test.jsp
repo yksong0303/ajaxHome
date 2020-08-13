@@ -11,6 +11,12 @@
 /* 0,'',null,undefined, false == false
 	!0,!'',!null,!undefined,!false == true
 */
+
+<%
+String name = request.getParameter("name");
+%>
+<%=name%>
+
 function func(str){
 	if(str){
 		alert(str.length);

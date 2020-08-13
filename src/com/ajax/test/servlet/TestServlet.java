@@ -26,16 +26,16 @@ public class TestServlet extends HttpServlet {
 		String str = "";
 		if("true".equals(request.getParameter("list"))){
 		List<String> strList = new ArrayList<>();
-		strList.add("ÇÏÇÏ");
+		strList.add("ï¿½ï¿½ï¿½ï¿½");
 		strList.add("È£È£");
-		strList.add("¤µ¤µ");
+		strList.add("ï¿½ï¿½ï¿½ï¿½");
 	
 		str =g.toJson(strList);
 	}else {
 		Map<String,String> map = new HashMap<>();
-		map.put("name", "È¦¸®");
+		map.put("name", "È¦ï¿½ï¿½");
 		map.put("age", "223");
-		map.put("addr", "¼­¿ï");
+		map.put("addr", "ï¿½ï¿½ï¿½ï¿½");
 		str = g.toJson(map);
 		
 	}

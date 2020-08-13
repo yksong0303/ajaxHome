@@ -32,7 +32,6 @@ public class TestFilter implements Filter {
 
    public void init(FilterConfig fConfig) throws ServletException {// 초기화라는뜻인데 이러나저러나 생성자 선언되고(1번) 호출됨 2등
       String excludePatterns = fConfig.getInitParameter("excludes");
-      System.out.println(excludePatterns);
    }
 
    public void destroy() { // 서버꺼질때 호출됨 4등

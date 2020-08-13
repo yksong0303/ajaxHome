@@ -1,5 +1,6 @@
 package com.ajax.test.servlet;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,21 +18,25 @@ import org.apache.tomcat.dbcp.dbcp2.PoolableConnectionFactory;
 import org.apache.tomcat.dbcp.dbcp2.PoolingDriver;
 import org.apache.tomcat.dbcp.pool2.impl.GenericObjectPool;
 import org.apache.tomcat.dbcp.pool2.impl.GenericObjectPoolConfig;
+
+import common.Conn;
+
 /*
  * dbcp2 : Database connection pooling
  * HikariCP : Hikari Connection Pooling
  */
-@WebServlet(loadOnStartup = 1)
+@WebServlet(loadOnStartup = 1, urlPatterns = "/")
 public class InitServlet extends HttpServlet {
 	private static final long serialVersionUID = -2273647679784828245L;
 	private static final String URL = "jdbc:oracle:thin:@localhost:1521/xe";
 	private static final String ID = "test";
 	private static final String PWD = "test";
-	private static final String DRIVER_NAME = "oracle.jdbc.driver.OracleDriver";
+	private static final String DRIVER_NAME = "oracle.jdbc.OracleDriver";
 
 	public void init() {
 		initDriverClassName();
 		initDBCP2();
+		System.out.println("로드완료");
 	}
 
 	private void initDriverClassName() {
@@ -71,27 +76,62 @@ public class InitServlet extends HttpServlet {
 	public static final Connection getConnection() {
 		String jdbcDriver = "jdbc:apache:commons:dbcp:jwc";
 		try {
-			return DriverManager.getConnection(jdbcDriver);
+			Connection con = DriverManager.getConnection(jdbcDriver);
+			con.setAutoCommit(false);
+			return con;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
+	public static void close(PreparedStatement ps, Connection conn) {
+		try {
+			ps.close();
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public static void close(ResultSet rs, PreparedStatement ps, Connection conn) {
+		try {
+			rs.close();
+			ps.close();
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
 	public static void main(String[] args) {
 		InitServlet is = new InitServlet();
 		is.init();
 		Connection con = InitServlet.getConnection();
-		System.out.println(con);
-	}
+		String sql = "{call prd_incress_sal(?,?)}";
+		try {
+			CallableStatement cs = con.prepareCall(sql);
+			cs.setInt(1, 1);
+			cs.setDouble(2, 1.2);
+			int result = cs.executeUpdate();
+			System.out.println("결과 : " + result);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
 
-	public static void close(PreparedStatement ps, Connection conn) {
-		// TODO Auto-generated method stub
-		
-	}
+				}
+			}
 
-	public static void close(ResultSet rs, PreparedStatement ps, Connection conn) {
-		// TODO Auto-generated method stub
-		
+		}
 	}
 }
